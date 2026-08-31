@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: voiceaiagent-monitor
+  namespace: default
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: voiceaiagent
+  namespaceSelector:
+    matchNames:
+      - default
+  podMetricsEndpoints:
+    - port: http
+      path: /metrics          # ✅ Removed trailing slash
+      interval: 15s
+      scrapeTimeout: 10s
