@@ -1,0 +1,9 @@
+rules:
+  - seriesQuery: 'voice_agent_active_calls'
+    resources:
+      overrides:
+        namespace: {resource: "namespace"}
+        pod: {resource: "pod"}
+    name:
+      as: "voice_agent_active_calls"
+    metricsQuery: 'avg(voice_agent_active_calls) by (<<.GroupBy>>)'
