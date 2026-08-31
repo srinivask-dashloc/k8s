@@ -1,0 +1,78 @@
+#GNU nano 8.3
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voiceaiagent
+  namespace: default
+  labels:
+    app: voiceaiagent
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: voiceaiagent
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  template:
+    metadata:
+      labels:
+        app: voiceaiagent
+
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+
+    spec:
+      terminationGracePeriodSeconds: 100
+      containers:
+        - name: voiceaiagent
+          image: 623170743694.dkr.ecr.ap-south-1.amazonaws.com/voice-ai-agent-v7:latest
+          imagePullPolicy: Always
+
+          ports:
+            - name: http
+              containerPort: 8000
+
+          envFrom:
+            - configMapRef:
+                name: voiceaiagent-config
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
+
+          lifecycle:
+            preStop:
+              exec:
+                # Give the LB ~15s to observe /ready=503 before uvicorn stops accepting.
+                command: ["/bin/sh", "-c", "sleep 15"]
+
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "1.5Gi"
+              cpu: "1000m"
