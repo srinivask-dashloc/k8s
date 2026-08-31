@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: voiceaiagent-config
+  namespace: default
+data:
+  AWS_REGION: "ap-south-1"
+  CW_NAMESPACE: "VoiceAgent"
+  CW_METRIC_NAME: "ActiveCalls"
+  MAX_CALLS: "10"
+  SCALE_OUT_THRESHOLD: "8"
+  POLLY_VOICE_MALE: "Kajal"
+  POLLY_VOICE_FEMALE: "Aditi"
+  STT_MODEL: "nova-3"
+  LLM_MODEL: "gpt-4.1-mini-2025-04-14"
+  TTS_VOICE: "5e3c580f-f42b-41ea-8c8a-c681c72f849d"
+  AZURE_TTS_VOICE: "hi-IN-MadhurNeural"
+  TTS_LANGUAGE: "hi-IN"
+  AZURE_TTS_REGION: "eastus"
+  MCUBE_SAMPLE_RATE: "8000"
+  STT_SAMPLE_RATE: "16000"
+  VAD_SAMPLE_RATE: "16000"
+  CHUNK_SIZE_MS: "100"
+  VAD_WINDOW_SIZE: "512"
+  VAD_THRESHOLD: "0.85"
+  VAD_MIN_SPEECH_DURATION_MS: "150"
+  VAD_INTERRUPTION_MS: "1500"
+  VAD_MIN_SILENCE_DURATION_MS: "300"
+  VAD_SPEECH_PAD_MS: "30"
+  WORD_BUFFER_SIZE: "5"
+  MIN_BUFFER_SIZE: "40"
+  MAX_BUFFER_SIZE: "100"
+  FLUSH_TIMEOUT: "300"
+  MAX_HISTORY_MESSAGES: "30"
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  ENQUIRY_URL: "https://api.dashloc.com/enquiry"
