@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: voiceaiagent-service
+  namespace: default
+  labels:
+    app: voiceaiagent
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-south-1:623170743694:certificate/13064b12-79eb-4126-82ff-cf239ecc2802"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"    # ← Changed from "http" to "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"  # ← Added for WebSocket keep-alive
+spec:
+  type: LoadBalancer
+  selector:
+    app: voiceaiagent
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8000
+      nodePort: 30080
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8000
+  sessionAffinity: None
